@@ -14,12 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 @RestController
+@RequestMapping("products")
 public class ProductController {
     @Autowired
     private ProductService productService;
     @PreAuthorize("hasRole('Admin')")
-    @PostMapping(value = {"/addNewProduct"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Product addNewProduct(@RequestPart("product") Product product,
+    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Product addNewProduct(@RequestPart Product product,
                                  @RequestPart ("imageFile") MultipartFile[] file){
         try{
             Set<ImageModel> images=uploadImage(file);
@@ -44,20 +45,20 @@ public class ProductController {
     }
 
 
-    @GetMapping({"/getAllProducts"})
+    @GetMapping
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
 
     }
 
-    @GetMapping({"/getProductDetailsById/{productId}"})
-    public Product getProductDetailsById(@PathVariable("productId") Integer productId){
+    @GetMapping({"{productId}"})
+    public Product getProductDetailsById(@PathVariable Integer productId){
         return productService.getProductDetailsById(productId);
     }
 
     @PreAuthorize("hasRole('Admin')")
-    @DeleteMapping({"/deleteProductDetails/{productId}"})
-    public void deleteProductDetails(@PathVariable("productId") Integer productId){
+    @DeleteMapping({"/{productId}"})
+    public void deleteProductDetails(@PathVariable Integer productId){
         productService.deleteProductDetails(productId);
     }
 }
